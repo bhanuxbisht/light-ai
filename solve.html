@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Light AI — Solve Problem</title>
+  <link rel="stylesheet" href="solve.css">
+</head>
+<body>
+  <div class="solve-layout">
+    <aside class="problem-panel">
+      <header>
+        <h1 id="problem-title">Loading...</h1>
+        <p id="problem-meta" class="meta">...</p>
+        <div class="problem-nav">
+          <button id="prev-problem" class="btn">← Previous</button>
+          <button id="next-problem" class="btn">Next →</button>
+        </div>
+      </header>
+
+      <section class="statement">
+        <div id="problem-description">Loading problem...</div>
+        <h3>Examples</h3>
+        <div id="problem-examples"></div>
+        <h3>Constraints</h3>
+        <ul id="problem-constraints"></ul>
+      </section>
+
+      <section class="tests">
+        <h3>Test Cases (<span id="test-count">0</span>)</h3>
+        <div id="test-results"></div>
+      </section>
+
+      <section class="hints">
+        <h3>💡 AI Hints</h3>
+        <div id="hint-area">Click "Get Hint" for progressive hints</div>
+        <div class="hint-controls">
+          <button id="get-hint" class="btn">Get Hint</button>
+          <button id="show-solution" class="btn">View Solution</button>
+        </div>
+      </section>
+
+      <footer>
+        <button id="run-btn" class="btn">▶ Run Code</button>
+        <button id="submit-btn" class="btn primary">Submit Solution</button>
+        <div id="status" class="status">Ready</div>
+      </footer>
+    </aside>    <main class="editor-area">
+      <div id="editor-toolbar">
+        <label for="language">Language:</label>
+        <select id="language">
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+        </select>
+        <button id="reset-code" class="btn-small">Reset Code</button>
+      </div>
+
+      <div id="editor-wrap">
+        <div id="monaco-container" style="display:none;height:100%;width:100%;"></div>
+        <textarea id="textarea-editor" spellcheck="false"></textarea>
+      </div>
+
+      <section class="output">
+        <div class="output-header">
+          <h3>Console Output</h3>
+          <button id="clear-output" class="btn-small">Clear</button>
+        </div>
+        <pre id="output-area">// Run your code to see output here</pre>
+      </section>
+    </main>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>🎉 All Tests Passed!</h2>
+      <div id="success-stats"></div>
+      <div class="modal-actions">
+        <button id="view-solution-btn" class="btn">View Solution</button>
+        <button id="next-problem-btn" class="btn primary">Next Problem →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load problem database -->
+  <script src="problems.js"></script>
+  <!-- Monaco loader (optional) -->
+  <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  <script src="solve.js"></script>
+</body>
+</html>

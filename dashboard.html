@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Light AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Light AI</a>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Problems</a>
+                <a href="#" class="nav-link">Battles</a>
+                <a href="#" class="nav-link">Leaderboard</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-icon" title="Notifications">
+                    <span>🔔</span>
+                </button>
+                <div class="user-menu">
+                    <img src="data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230071E3'/%3E%3Ctext x='16' y='21' text-anchor='middle' fill='white' font-size='14' font-weight='600' font-family='Arial'%3EU%3C/text%3E%3C/svg%3E" alt="User" class="avatar">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Your Progress</h3>
+                <div class="sidebar-stats">
+                    <div class="sidebar-stat">
+                        <span class="stat-value">Level 12</span>
+                        <span class="stat-label">Current Level</span>
+                    </div>
+                    <div class="sidebar-stat">
+                        <span class="stat-value">47</span>
+                        <span class="stat-label">Problems Solved</span>
+                    </div>
+                    <div class="sidebar-stat">
+                        <span class="stat-value">7 Days</span>
+                        <span class="stat-label">Current Streak</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">DSA Patterns</h3>
+                <nav class="pattern-nav">
+                    <a href="#" class="pattern-link">
+                        <span class="pattern-emoji">📊</span>
+                        <span class="pattern-name">Arrays & Strings</span>
+                        <span class="pattern-count">12/15</span>
+                    </a>
+                    <a href="#" class="pattern-link">
+                        <span class="pattern-emoji">🔄</span>
+                        <span class="pattern-name">Two Pointers</span>
+                        <span class="pattern-count">8/10</span>
+                    </a>
+                    <a href="#" class="pattern-link">
+                        <span class="pattern-emoji">🪟</span>
+                        <span class="pattern-name">Sliding Window</span>
+                        <span class="pattern-count">6/8</span>
+                    </a>
+                    <a href="#" class="pattern-link">
+                        <span class="pattern-emoji">🔍</span>
+                        <span class="pattern-name">Binary Search</span>
+                        <span class="pattern-count">10/12</span>
+                    </a>
+                    <a href="#" class="pattern-link">
+                        <span class="pattern-emoji">🌳</span>
+                        <span class="pattern-name">Trees & Graphs</span>
+                        <span class="pattern-count">5/18</span>
+                    </a>
+                    <a href="#" class="pattern-link">
+                        <span class="pattern-emoji">💎</span>
+                        <span class="pattern-name">Dynamic Programming</span>
+                        <span class="pattern-count">3/20</span>
+                    </a>
+                    <a href="#" class="pattern-link">
+                        <span class="pattern-emoji">🎯</span>
+                        <span class="pattern-name">Greedy</span>
+                        <span class="pattern-count">3/7</span>
+                    </a>
+                    <a href="#" class="pattern-link view-all">
+                        <span>View All Patterns →</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Welcome Header -->
+            <header class="dashboard-header">
+                <div>
+                    <h1 class="dashboard-title">Welcome back, User! 👋</h1>
+                    <p class="dashboard-subtitle">Let's continue your journey to mastery</p>
+                </div>
+                <button class="btn-primary">Start Daily Challenge</button>
+            </header>
+
+            <!-- XP Progress Card -->
+            <section class="xp-card">
+                <div class="xp-header">
+                    <div>
+                        <h2 class="xp-level">Level 12</h2>
+                        <p class="xp-subtitle">2,850 XP • 350 XP to Level 13</p>
+                    </div>
+                    <div class="xp-badge">
+                        <span class="badge-icon">⚡</span>
+                        <span class="badge-text">Pro Member</span>
+                    </div>
+                </div>
+                <div class="xp-progress-bar">
+                    <div class="xp-progress-fill" style="width: 89%"></div>
+                </div>
+                <div class="xp-stats">
+                    <div class="xp-stat">
+                        <span class="xp-stat-value">+180 XP</span>
+                        <span class="xp-stat-label">This Week</span>
+                    </div>
+                    <div class="xp-stat">
+                        <span class="xp-stat-value">Top 15%</span>
+                        <span class="xp-stat-label">Global Rank</span>
+                    </div>
+                    <div class="xp-stat">
+                        <span class="xp-stat-value">7 Day</span>
+                        <span class="xp-stat-label">Streak 🔥</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Daily Challenge & Streak -->
+            <div class="grid-2">
+                <!-- Daily Challenge -->
+                <section class="card challenge-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Today's Challenge</h3>
+                        <span class="challenge-badge">+50 XP</span>
+                    </div>
+                    <div class="challenge-content">
+                        <h4 class="challenge-problem">Longest Substring Without Repeating Characters</h4>
+                        <div class="challenge-meta">
+                            <span class="difficulty medium">Medium</span>
+                            <span class="challenge-pattern">🪟 Sliding Window</span>
+                        </div>
+                        <p class="challenge-desc">Given a string s, find the length of the longest substring without repeating characters...</p>
+                        <button class="btn-primary btn-small">Start Challenge</button>
+                    </div>
+                </section>
+
+                <!-- Streak Calendar -->
+                <section class="card streak-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Activity Streak</h3>
+                        <span class="streak-count">🔥 7 Days</span>
+                    </div>
+                    <div class="streak-calendar">
+                        <div class="calendar-row">
+                            <span class="day-label">M</span>
+                            <span class="day-label">T</span>
+                            <span class="day-label">W</span>
+                            <span class="day-label">T</span>
+                            <span class="day-label">F</span>
+                            <span class="day-label">S</span>
+                            <span class="day-label">S</span>
+                        </div>
+                        <div class="calendar-days">
+                            <div class="day active"></div>
+                            <div class="day active"></div>
+                            <div class="day active"></div>
+                            <div class="day active"></div>
+                            <div class="day active"></div>
+                            <div class="day active"></div>
+                            <div class="day active today"></div>
+                        </div>
+                    </div>
+                    <p class="streak-message">Keep it going! Solve 1 problem today to maintain your streak.</p>
+                </section>
+            </div>
+
+            <!-- Recent Achievements -->
+            <section class="achievements-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Achievements</h2>
+                    <a href="#" class="section-link">View All →</a>
+                </div>
+                <div class="achievements-grid">
+                    <div class="achievement-card unlocked">
+                        <div class="achievement-icon">🎯</div>
+                        <h4 class="achievement-name">First Blood</h4>
+                        <p class="achievement-desc">Solved your first problem</p>
+                    </div>
+                    <div class="achievement-card unlocked">
+                        <div class="achievement-icon">🔥</div>
+                        <h4 class="achievement-name">Week Warrior</h4>
+                        <p class="achievement-desc">7-day streak achieved</p>
+                    </div>
+                    <div class="achievement-card unlocked">
+                        <div class="achievement-icon">⚡</div>
+                        <h4 class="achievement-name">Speed Demon</h4>
+                        <p class="achievement-desc">Solved a hard problem in under 10 min</p>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">💯</div>
+                        <h4 class="achievement-name">Century</h4>
+                        <p class="achievement-desc">Solve 100 problems</p>
+                        <div class="achievement-progress">47/100</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Continue Learning -->
+            <section class="problems-section">
+                <div class="section-header">
+                    <h2 class="section-title">Continue Learning</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active">Recommended</button>
+                        <button class="filter-tab">Recently Viewed</button>
+                        <button class="filter-tab">Bookmarked</button>
+                    </div>
+                </div>
+                <div class="problems-list">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <h4 class="problem-title">Two Sum</h4>
+                            <div class="problem-meta">
+                                <span class="difficulty easy">Easy</span>
+                                <span class="problem-pattern">📊 Array</span>
+                                <span class="problem-companies">Google, Amazon</span>
+                            </div>
+                        </div>
+                        <div class="problem-stats">
+                            <span class="acceptance-rate">✓ 92% Acceptance</span>
+                            <button class="btn-outline btn-small">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <h4 class="problem-title">Valid Parentheses</h4>
+                            <div class="problem-meta">
+                                <span class="difficulty easy">Easy</span>
+                                <span class="problem-pattern">📚 Stack</span>
+                                <span class="problem-companies">Meta, Microsoft</span>
+                            </div>
+                        </div>
+                        <div class="problem-stats">
+                            <span class="acceptance-rate">✓ 88% Acceptance</span>
+                            <button class="btn-outline btn-small">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <h4 class="problem-title">Merge Two Sorted Lists</h4>
+                            <div class="problem-meta">
+                                <span class="difficulty easy">Easy</span>
+                                <span class="problem-pattern">🔗 Linked List</span>
+                                <span class="problem-companies">Amazon, Apple</span>
+                            </div>
+                        </div>
+                        <div class="problem-stats">
+                            <span class="acceptance-rate">✓ 85% Acceptance</span>
+                            <button class="btn-outline btn-small">Solve</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

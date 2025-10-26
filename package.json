@@ -1,0 +1,28 @@
+{
+  "name": "light-ai",
+  "version": "1.0.0",
+  "description": "Light AI - Premium SaaS Interview Preparation Platform",
+  "main": "index.html",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "dsa",
+    "interview-prep",
+    "coding",
+    "algorithms",
+    "saas"
+  ],
+  "author": "Bhanu Bisht",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhanuxbisht/light-ai.git"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
