@@ -4,6 +4,10 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+require('dotenv').config();
+
+const { initializeDatabase } = require('./config/database');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +16,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
+
+// API Routes - Authentication
+app.use('/api/auth', authRoutes);
 
 // API Routes
 app.post('/api/execute', async (req, res) => {
@@ -117,9 +124,22 @@ app.get('/solve/:problemId?', (req, res) => {
   res.sendFile(path.join(__dirname, 'solve.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Light AI Server running on http://localhost:${PORT}`);
-  console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
-  console.log(`💻 Solve: http://localhost:${PORT}/solve`);
-});
+// Start server and initialize database
+async function startServer() {
+  try {
+    // Initialize database schema
+    await initializeDatabase();
+    
+    app.listen(PORT, () => {
+      console.log(`🚀 Light AI Server running on http://localhost:${PORT}`);
+      console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
+      console.log(`💻 Solve: http://localhost:${PORT}/solve`);
+      console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
