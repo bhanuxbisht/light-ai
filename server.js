@@ -6,9 +6,6 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const { initializeDatabase } = require('./config/database');
-const authRoutes = require('./routes/auth');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,8 +14,17 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
 
-// API Routes - Authentication
-app.use('/api/auth', authRoutes);
+// Check if database is available (optional for testing)
+let dbAvailable = false;
+try {
+  const { initializeDatabase } = require('./config/database');
+  const authRoutes = require('./routes/auth');
+  app.use('/api/auth', authRoutes);
+  dbAvailable = true;
+} catch (error) {
+  console.log('⚠️  Database not configured - running in demo mode');
+  console.log('   Install PostgreSQL to enable authentication');
+}
 
 // API Routes
 app.post('/api/execute', async (req, res) => {
@@ -127,14 +133,31 @@ app.get('/solve/:problemId?', (req, res) => {
 // Start server and initialize database
 async function startServer() {
   try {
-    // Initialize database schema
-    await initializeDatabase();
+    // Initialize database schema if available
+    if (dbAvailable) {
+      try {
+        const { initializeDatabase } = require('./config/database');
+        await initializeDatabase();
+        console.log('✅ Database connected');
+      } catch (dbError) {
+        console.log('⚠️  Database initialization skipped:', dbError.message);
+        dbAvailable = false;
+      }
+    }
     
     app.listen(PORT, () => {
-      console.log(`🚀 Light AI Server running on http://localhost:${PORT}`);
+      console.log(`\n🚀 Light AI Server running on http://localhost:${PORT}`);
+      console.log(`📱 Landing Page: http://localhost:${PORT}`);
       console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
-      console.log(`💻 Solve: http://localhost:${PORT}/solve`);
-      console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
+      console.log(`💻 Problem Solver: http://localhost:${PORT}/solve`);
+      console.log(`🎨 Visual Debugger: http://localhost:${PORT}/visualize.html`);
+      if (dbAvailable) {
+        console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
+      } else {
+        console.log(`\n⚠️  Running in DEMO MODE (no authentication)`);
+        console.log(`   To enable authentication, install PostgreSQL and configure .env`);
+      }
+      console.log(`\n✨ Ready to test! Open http://localhost:${PORT} in your browser\n`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

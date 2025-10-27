@@ -2,6 +2,18 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// Check if database is configured
+if (!process.env.DB_HOST || !process.env.DB_PASSWORD) {
+  console.log('⚠️  Database credentials not found in .env file');
+  module.exports = {
+    pool: null,
+    initializeDatabase: async () => {
+      throw new Error('Database not configured');
+    }
+  };
+  return;
+}
+
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
