@@ -1,7 +1,7 @@
 # 🚀 Light AI - Complete Development Prompt
 
 ## PROJECT OVERVIEW
-Build a **production-ready SaaS platform** for DSA (Data Structures & Algorithms) interview preparation, inspired by Thita.ai. The platform must be **fully functional, bug-free, with complete backend APIs** and modern frontend.
+Build a **production-ready SaaS platform** for DSA (Data Structures & Algorithms) interview preparation. The platform must be **fully functional, bug-free, with complete backend APIs** and modern frontend. We're creating a premium, professional coding interview platform that will be better than all existing competitors.
 
 ---
 

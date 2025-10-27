@@ -1,5 +1,5 @@
 # 🚀 Light AI - Complete Product Specification
-## MVP: DSA Practice Platform (Inspired by Thita.ai)
+## MVP: Premium DSA Practice Platform
 
 **Version:** 1.0  
 **Date:** October 27, 2025  
@@ -8,29 +8,31 @@
 
 ---
 
-## 📊 THITA.AI ANALYSIS SUMMARY
+## 🎯 LIGHT AI VISION
 
-### Core Features Analyzed:
+### Core Features:
 1. **90+ DSA Pattern Mastery** - Structured learning with patterns
-2. **AI Mock Interviews** - Adaptive interview practice
-3. **AI Code Practice** - Real-time code feedback
-4. **Learning Paths** - Structured curriculum
-5. **Resume Analyzer** - ATS optimization
-6. **Progress Analytics** - Comprehensive tracking
-7. **History Timeline** - Activity tracking
+2. **Visual Algorithm Debugger** - Industry-first step-by-step visualization
+3. **AI-Powered Coaching** - Smart hints and personalized guidance
+4. **Multi-Language Support** - JavaScript, Python, Java, C++, C
+5. **Gamification** - XP, achievements, streaks, leaderboards
+6. **Progress Analytics** - Comprehensive tracking with heatmaps
+7. **Pattern-Based Learning** - Organized curriculum for systematic mastery
 
-### Pricing Model:
-- **Free Tier:** Limited access (3 AI interviews/month, basic DSA)
-- **Pro ($400/month):** 15 interviews, 50 code sessions, full DSA
-- **Elite ($800/month):** 30 interviews, 150 sessions, all tracks
+### Our Pricing Strategy:
+- **Free Tier:** 20 problems, 10 executions/day, community support
+- **Pro (₹299/month):** All 50+ problems, unlimited execution, priority support
+- **Premium (₹599/month):** Pro + AI hints + mock interviews + analytics
 
-### Key UI/UX Patterns:
-- Clean, modern dashboard with cards
+### Premium UI/UX Design:
+- Apple-inspired design system
+- Dark theme with smooth animations
 - Sidebar navigation with icons
 - Progress tracking with visual indicators
 - Pattern-based problem organization
-- Real-time code editor
-- Instant feedback system
+- Monaco code editor (VS Code quality)
+- Real-time feedback system
+- Mobile-first responsive design
 
 ---
 
