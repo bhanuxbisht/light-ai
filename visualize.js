@@ -31,8 +31,8 @@ class AlgorithmVisualizer {
   }
 
   attachEventListeners() {
-    document.getElementById('algo-select').addEventListener('change', () => this.reset());
-    document.getElementById('visualize-btn').addEventListener('click', () => this.visualize());
+    document.getElementById('algorithm-select').addEventListener('change', () => this.reset());
+    document.getElementById('load-btn').addEventListener('click', () => this.visualize());
     document.getElementById('reset-btn').addEventListener('click', () => this.reset());
     document.getElementById('prev-btn').addEventListener('click', () => this.prevStep());
     document.getElementById('play-btn').addEventListener('click', () => this.togglePlay());
@@ -40,12 +40,13 @@ class AlgorithmVisualizer {
     document.getElementById('end-btn').addEventListener('click', () => this.goToEnd());
     document.getElementById('speed-slider').addEventListener('input', (e) => {
       this.speed = parseInt(e.target.value);
-      document.getElementById('speed-value').textContent = this.speed + 'ms';
+      const speedMultiplier = (2000 / this.speed).toFixed(1);
+      document.getElementById('speed-value').textContent = speedMultiplier + 'x';
     });
   }
 
   visualize() {
-    const algo = document.getElementById('algo-select').value;
+    const algo = document.getElementById('algorithm-select').value;
     const arrayInput = document.getElementById('array-input').value.trim();
     
     if (!arrayInput) {
@@ -63,16 +64,16 @@ class AlgorithmVisualizer {
     this.reset();
     
     switch(algo) {
-      case 'twosum':
+      case 'twoSum':
         this.generateTwoSumSteps(arr);
         break;
-      case 'bubblesort':
+      case 'bubbleSort':
         this.generateBubbleSortSteps(arr);
         break;
-      case 'binarysearch':
+      case 'binarySearch':
         this.generateBinarySearchSteps(arr);
         break;
-      case 'reverse':
+      case 'reverseArray':
         this.generateReverseArraySteps(arr);
         break;
       default:
@@ -585,7 +586,7 @@ const algorithmCode = {
 const visualizer = new AlgorithmVisualizer();
 
 // Update code display on algorithm change
-document.getElementById('algo-select').addEventListener('change', (e) => {
+document.getElementById('algorithm-select').addEventListener('change', (e) => {
   const code = algorithmCode[e.target.value] || '';
   const codeDisplay = document.getElementById('code-display');
   codeDisplay.innerHTML = '';
@@ -599,7 +600,7 @@ document.getElementById('algo-select').addEventListener('change', (e) => {
   
   // Show/hide target input based on algorithm
   const targetSection = document.getElementById('target-label').parentElement;
-  if (e.target.value === 'twosum' || e.target.value === 'binarysearch') {
+  if (e.target.value === 'twoSum' || e.target.value === 'binarySearch') {
     targetSection.style.display = 'flex';
   } else {
     targetSection.style.display = 'none';
@@ -607,4 +608,4 @@ document.getElementById('algo-select').addEventListener('change', (e) => {
 });
 
 // Initialize with default algorithm
-document.getElementById('algo-select').dispatchEvent(new Event('change'));
+document.getElementById('algorithm-select').dispatchEvent(new Event('change'));

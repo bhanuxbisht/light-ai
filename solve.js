@@ -218,20 +218,119 @@
     elements.testResults.innerHTML = '';
     
     const code = getCode();
+    const startTime = Date.now();
     
     try {
       const results = await executeCode(code, currentProblem.testCases);
+      const totalTime = Math.round((Date.now() - startTime) / 1000); // seconds
+      
       displayAllResults(results);
       
       // Check if all passed
       const allPassed = results.every(r => r.passed);
+      const testsPassed = results.filter(r => r.passed).length;
+      const testsTotal = results.length;
+      
+      // Submit to backend
+      await submitToBackend({
+        problemId: currentProblem.id,
+        code: code,
+        language: currentLanguage,
+        timeTaken: totalTime,
+        passed: allPassed,
+        testsPassed: testsPassed,
+        testsTotal: testsTotal
+      });
+      
       if (allPassed) {
-        showSuccessModal(results);
+        showSuccessModal(results, totalTime);
       }
     } catch (error) {
       elements.outputArea.textContent = `❌ Error: ${error.message}`;
       elements.statusEl.textContent = 'Error';
     }
+  }
+
+  // Submit results to backend
+  async function submitToBackend(submissionData) {
+    const token = localStorage.getItem('token');
+    
+    // Skip if not logged in (demo mode)
+    if (!token) {
+      console.log('Demo mode - skipping backend submission');
+      return null;
+    }
+
+    try {
+      const response = await fetch('/api/progress/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(submissionData)
+      });
+
+      if (response.status === 401) {
+        // Token expired, redirect to login
+        localStorage.removeItem('token');
+        if (confirm('Your session has expired. Redirect to login?')) {
+          window.location.href = '/login.html';
+        }
+        return null;
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to submit solution');
+      }
+
+      const data = await response.json();
+      console.log('✅ Submission recorded:', data);
+      
+      // Show XP notification if earned
+      if (data.xpEarned > 0) {
+        showXPNotification(data.xpEarned, data.isFirstSolve);
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Backend submission error:', error);
+      // Don't block user experience if backend fails
+      return null;
+    }
+  }
+
+  // Show XP earned notification
+  function showXPNotification(xp, isFirstSolve) {
+    const notification = document.createElement('div');
+    notification.className = 'xp-notification';
+    notification.innerHTML = `
+      <div style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
+      <div style="font-size: 1.5rem; font-weight: 700; color: #0071E3;">+${xp} XP</div>
+      ${isFirstSolve ? '<div style="color: #30D158; font-size: 0.9rem; margin-top: 4px;">🎉 First Solve Bonus!</div>' : ''}
+    `;
+    notification.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(20, 20, 22, 0.95);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(0, 113, 227, 0.3);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      z-index: 10000;
+      animation: xpPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 20px 60px rgba(0, 113, 227, 0.3);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.style.animation = 'xpFade 0.3s ease-out forwards';
+      setTimeout(() => notification.remove(), 300);
+    }, 2000);
   }
 
   // Execute code based on language
@@ -433,9 +532,10 @@
   }
 
   // Show success modal
-  function showSuccessModal(results) {
+  function showSuccessModal(results, totalTime) {
     const avgRuntime = Math.round(results.reduce((sum, r) => sum + r.runtime, 0) / results.length);
     const totalRuntime = results.reduce((sum, r) => sum + r.runtime, 0);
+    const speedBonus = totalTime < 120 ? '⚡ Speed Bonus!' : '';
     
     elements.successStats.innerHTML = `
       <div style="font-size:3rem;margin-bottom:16px">🎉</div>
@@ -446,10 +546,11 @@
           <div style="font-size:1.3rem;font-weight:600;color:#30D158">${avgRuntime}ms</div>
         </div>
         <div>
-          <div style="color:#8d8d93;font-size:0.85rem">Total Runtime</div>
-          <div style="font-size:1.3rem;font-weight:600;color:#30D158">${totalRuntime}ms</div>
+          <div style="color:#8d8d93;font-size:0.85rem">Total Time</div>
+          <div style="font-size:1.3rem;font-weight:600;color:#30D158">${totalTime}s</div>
         </div>
       </div>
+      ${speedBonus ? `<p style="color:#0071E3;font-size:1rem;margin-top:12px;font-weight:600">${speedBonus}</p>` : ''}
       <p style="color:#8d8d93;font-size:0.9rem;margin-top:16px">Auto-advancing to next problem in 3 seconds...</p>
     `;
     

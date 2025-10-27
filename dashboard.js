@@ -1,6 +1,184 @@
 // Dashboard JavaScript
 console.log('%c⚡ Light AI Dashboard', 'font-size: 28px; font-weight: 600; color: #0071E3; font-family: -apple-system;');
 
+// Global user data
+let userData = null;
+
+// Fetch user progress from API
+async function loadUserProgress() {
+    try {
+        window.LightAI.showLoading('Loading your progress...');
+        
+        const response = await window.LightAI.fetchWithAuth('/api/progress/me');
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch progress');
+        }
+
+        const data = await response.json();
+        userData = data;
+        updateDashboard(data);
+        
+        window.LightAI.hideLoading();
+    } catch (error) {
+        console.error('Error loading progress:', error);
+        window.LightAI.hideLoading();
+        window.LightAI.toast('Failed to load your progress. Please refresh the page.', 'error');
+    }
+}
+
+// Update dashboard with real data
+function updateDashboard(data) {
+    const { progress, recentSubmissions, achievements } = data;
+
+    // Update XP display
+    const xpCurrent = document.querySelector('.xp-current');
+    const xpTarget = document.querySelector('.xp-target');
+    const xpProgressFill = document.querySelector('.xp-progress-fill');
+    
+    if (xpCurrent && xpTarget && xpProgressFill) {
+        const currentXP = progress.total_xp;
+        const targetXP = Math.ceil((currentXP + 1) / 1000) * 1000; // Next 1000 XP milestone
+        
+        xpCurrent.textContent = currentXP;
+        xpTarget.textContent = targetXP;
+        
+        const percentage = (currentXP / targetXP) * 100;
+        xpProgressFill.style.width = `${percentage}%`;
+    }
+
+    // Update streak display
+    updateStreakDisplay(progress.current_streak);
+
+    // Update stats
+    const levelStat = document.querySelector('.stat-value[data-stat="level"]');
+    const problemsStat = document.querySelector('.stat-value[data-stat="problems"]');
+    const timeStat = document.querySelector('.stat-value[data-stat="time"]');
+    const streakStat = document.querySelector('.stat-value[data-stat="streak"]');
+    
+    // Calculate level from XP (1000 XP per level)
+    const level = Math.floor(progress.total_xp / 1000) + 1;
+    
+    if (levelStat) {
+        levelStat.textContent = `Level ${level}`;
+    }
+    
+    if (problemsStat) {
+        animateValue(problemsStat, 0, progress.problems_solved, 1000);
+    }
+    
+    if (timeStat) {
+        const hours = Math.floor(progress.total_time_spent / 3600);
+        timeStat.textContent = hours;
+    }
+    
+    if (streakStat) {
+        streakStat.textContent = `${progress.current_streak} Days`;
+    }
+
+    // Update achievements display
+    updateAchievements(achievements);
+
+    // Update recent activity
+    updateRecentActivity(recentSubmissions);
+}
+
+// Update streak visualization
+function updateStreakDisplay(currentStreak) {
+    const streakDays = document.querySelectorAll('.streak-day');
+    streakDays.forEach((day, index) => {
+        if (index < currentStreak) {
+            day.classList.add('active');
+        } else {
+            day.classList.remove('active');
+        }
+    });
+}
+
+// Update achievements
+function updateAchievements(achievements) {
+    const achievementsContainer = document.querySelector('.achievements-list');
+    if (!achievementsContainer) return;
+
+    if (achievements.length === 0) {
+        achievementsContainer.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">No achievements yet. Keep solving problems!</p>';
+        return;
+    }
+
+    achievementsContainer.innerHTML = achievements.map(achievement => `
+        <div class="achievement-card unlocked">
+            <div class="achievement-icon">${achievement.icon}</div>
+            <div class="achievement-info">
+                <h4>${achievement.name}</h4>
+                <p>${achievement.description}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Update recent activity
+function updateRecentActivity(submissions) {
+    const activityContainer = document.querySelector('.recent-activity');
+    if (!activityContainer) return;
+
+    if (submissions.length === 0) {
+        activityContainer.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">No recent submissions. Start solving!</p>';
+        return;
+    }
+
+    activityContainer.innerHTML = submissions.slice(0, 5).map(submission => {
+        const date = new Date(submission.submitted_at);
+        const timeAgo = getTimeAgo(date);
+        const statusIcon = submission.passed ? '✅' : '❌';
+        const statusClass = submission.passed ? 'success' : 'failed';
+        
+        return `
+            <div class="activity-item ${statusClass}">
+                <span class="activity-icon">${statusIcon}</span>
+                <div class="activity-details">
+                    <strong>${submission.problem_title}</strong>
+                    <span class="activity-time">${timeAgo}</span>
+                </div>
+                <span class="activity-language">${submission.language}</span>
+            </div>
+        `;
+    }).join('');
+}
+
+// Helper function to get time ago
+function getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    
+    if (seconds < 60) return 'Just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+    return date.toLocaleDateString();
+}
+
+// Show error message
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-toast';
+    errorDiv.textContent = message;
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255,69,58,0.9);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 5000);
+}
+
 // Navbar scroll effect
 let lastScroll = 0;
 const nav = document.querySelector('.nav');
@@ -19,6 +197,9 @@ window.addEventListener('scroll', () => {
 
 // Animate XP progress bar on load
 window.addEventListener('load', () => {
+    // Load user progress when page loads
+    loadUserProgress();
+    
     const progressBar = document.querySelector('.xp-progress-fill');
     if (progressBar) {
         const targetWidth = progressBar.style.width;

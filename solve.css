@@ -63,3 +63,25 @@ footer{display:flex;gap:12px;align-items:center;padding-top:12px;border-top:1px 
 }
 
 #problem-constraints{padding-left:20px;color:var(--muted);font-size:0.9rem}
+
+/* XP Notification Animations */
+@keyframes xpPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes xpFade {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}

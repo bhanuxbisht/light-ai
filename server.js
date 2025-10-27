@@ -19,7 +19,9 @@ let dbAvailable = false;
 try {
   const { initializeDatabase } = require('./config/database');
   const authRoutes = require('./routes/auth');
+  const progressRoutes = require('./routes/progress');
   app.use('/api/auth', authRoutes);
+  app.use('/api/progress', progressRoutes);
   dbAvailable = true;
 } catch (error) {
   console.log('⚠️  Database not configured - running in demo mode');
@@ -153,6 +155,7 @@ async function startServer() {
       console.log(`🎨 Visual Debugger: http://localhost:${PORT}/visualize.html`);
       if (dbAvailable) {
         console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
+        console.log(`📈 Progress API: http://localhost:${PORT}/api/progress`);
       } else {
         console.log(`\n⚠️  Running in DEMO MODE (no authentication)`);
         console.log(`   To enable authentication, install PostgreSQL and configure .env`);
