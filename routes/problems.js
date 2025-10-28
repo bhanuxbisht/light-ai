@@ -4,13 +4,21 @@
 const express = require('express');
 const { pool } = require('../config/database');
 const { authenticateToken, optionalAuth } = require('../middleware/auth');
+const {
+  validateDifficulty,
+  validatePagination,
+  validateStatus,
+  validateSubmission,
+  validateHintLevel,
+  validateSlug
+} = require('../middleware/validation');
 
 const router = express.Router();
 
 // ============================================================================
 // GET /api/problems - List all problems with filters and pagination
 // ============================================================================
-router.get('/', optionalAuth, async (req, res) => {
+router.get('/', optionalAuth, validateDifficulty, validatePagination, validateStatus, async (req, res) => {
   const userId = req.user?.id; // Optional authentication
   const {
     difficulty,    // Filter: 'Easy', 'Medium', 'Hard'
@@ -177,7 +185,7 @@ router.get('/', optionalAuth, async (req, res) => {
 // ============================================================================
 // GET /api/problems/:slug - Get single problem with all details
 // ============================================================================
-router.get('/:slug', optionalAuth, async (req, res) => {
+router.get('/:slug', optionalAuth, validateSlug, async (req, res) => {
   const { slug } = req.params;
   const userId = req.user?.id;
 
@@ -247,7 +255,7 @@ router.get('/:slug', optionalAuth, async (req, res) => {
 // ============================================================================
 // POST /api/problems/:slug/submit - Submit solution and update progress
 // ============================================================================
-router.post('/:slug/submit', authenticateToken, async (req, res) => {
+router.post('/:slug/submit', authenticateToken, validateSlug, validateSubmission, async (req, res) => {
   const { slug } = req.params;
   const userId = req.user.id;
   const { 
@@ -401,7 +409,7 @@ router.post('/:slug/submit', authenticateToken, async (req, res) => {
 // ============================================================================
 // GET /api/problems/:slug/submissions - Get user's submission history
 // ============================================================================
-router.get('/:slug/submissions', authenticateToken, async (req, res) => {
+router.get('/:slug/submissions', authenticateToken, validateSlug, async (req, res) => {
   const { slug } = req.params;
   const userId = req.user.id;
   const { limit = 10 } = req.query;
@@ -446,7 +454,7 @@ router.get('/:slug/submissions', authenticateToken, async (req, res) => {
 // ============================================================================
 // POST /api/problems/:slug/bookmark - Toggle bookmark
 // ============================================================================
-router.post('/:slug/bookmark', authenticateToken, async (req, res) => {
+router.post('/:slug/bookmark', authenticateToken, validateSlug, async (req, res) => {
   const { slug } = req.params;
   const userId = req.user.id;
 
@@ -509,7 +517,7 @@ router.post('/:slug/bookmark', authenticateToken, async (req, res) => {
 // ============================================================================
 // GET /api/problems/:slug/hints - Get hints (progressive reveal)
 // ============================================================================
-router.get('/:slug/hints', authenticateToken, async (req, res) => {
+router.get('/:slug/hints', authenticateToken, validateSlug, validateHintLevel, async (req, res) => {
   const { slug } = req.params;
   const { level = 1 } = req.query; // Hint level 1, 2, 3...
 
