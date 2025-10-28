@@ -21,104 +21,15 @@ try {
   const authRoutes = require('./routes/auth');
   const progressRoutes = require('./routes/progress');
   const problemsRoutes = require('./routes/problems');
+  const executeRoutes = require('./routes/execute');
   app.use('/api/auth', authRoutes);
   app.use('/api/progress', progressRoutes);
   app.use('/api/problems', problemsRoutes);
+  app.use('/api/execute', executeRoutes);
   dbAvailable = true;
 } catch (error) {
   console.log('⚠️  Database not configured - running in demo mode');
   console.log('   Install PostgreSQL to enable authentication');
-}
-
-// API Routes
-app.post('/api/execute', async (req, res) => {
-  const { language, code, testCases } = req.body;
-  
-  try {
-    // Execute code based on language
-    const results = await executeCode(language, code, testCases);
-    res.json({ success: true, results });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// Code execution handler (safe sandbox - production should use Docker)
-async function executeCode(language, code, testCases) {
-  const results = [];
-  
-  for (const test of testCases) {
-    try {
-      let result;
-      const startTime = Date.now();
-      
-      if (language === 'javascript') {
-        result = executeJavaScript(code, test.input);
-      } else if (language === 'python') {
-        result = await executePython(code, test.input);
-      } else if (language === 'java') {
-        result = await executeJava(code, test.input);
-      } else if (language === 'cpp') {
-        result = await executeCpp(code, test.input);
-      }
-      
-      const runtime = Date.now() - startTime;
-      const passed = JSON.stringify(result) === JSON.stringify(test.expected);
-      
-      results.push({
-        passed,
-        input: test.input,
-        expected: test.expected,
-        actual: result,
-        runtime,
-        error: null
-      });
-    } catch (error) {
-      results.push({
-        passed: false,
-        input: test.input,
-        expected: test.expected,
-        actual: null,
-        runtime: 0,
-        error: error.message
-      });
-    }
-  }
-  
-  return results;
-}
-
-// JavaScript execution (sandbox in Web Worker on client side for now)
-function executeJavaScript(code, input) {
-  // Client-side execution via Web Worker
-  return { clientSide: true };
-}
-
-// Python execution (mock for now - production needs docker/sandbox)
-async function executePython(code, input) {
-  // Mock: compute Two Sum
-  if (input.nums && typeof input.target === 'number') {
-    const map = new Map();
-    for (let i = 0; i < input.nums.length; i++) {
-      const complement = input.target - input.nums[i];
-      if (map.has(complement)) {
-        return [map.get(complement), i];
-      }
-      map.set(input.nums[i], i);
-    }
-    return [];
-  }
-  return null;
-}
-
-// Java execution (mock for now)
-async function executeJava(code, input) {
-  return executePython(code, input); // Mock
-}
-
-// C++ execution (mock for now)
-async function executeCpp(code, input) {
-  return executePython(code, input); // Mock
 }
 
 // Serve HTML files
@@ -159,6 +70,7 @@ async function startServer() {
         console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
         console.log(`📈 Progress API: http://localhost:${PORT}/api/progress`);
         console.log(`📝 Problems API: http://localhost:${PORT}/api/problems`);
+        console.log(`⚙️  Execute API: http://localhost:${PORT}/api/execute`);
       } else {
         console.log(`\n⚠️  Running in DEMO MODE (no authentication)`);
         console.log(`   To enable authentication, install PostgreSQL and configure .env`);

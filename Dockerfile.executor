@@ -1,0 +1,45 @@
+# Code Execution Docker Configuration
+# Secure multi-language code execution environment
+
+# Base image with multiple language runtimes
+FROM ubuntu:22.04
+
+# Prevent interactive prompts during installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python, Node.js, Java, GCC (C/C++)
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    nodejs \
+    npm \
+    openjdk-17-jdk \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for code execution
+RUN useradd -m -u 1000 coderunner
+
+# Create workspace directory
+RUN mkdir -p /workspace && chown coderunner:coderunner /workspace
+
+# Set working directory
+WORKDIR /workspace
+
+# Switch to non-root user
+USER coderunner
+
+# Set resource limits via Docker run command:
+# docker run --memory="256m" --cpus="0.5" --network none --read-only \
+#   -v /tmp:/tmp:rw code-executor
+
+# Copy execution scripts
+COPY --chown=coderunner:coderunner execute.sh /usr/local/bin/
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD echo "OK"
+
+# Default command
+CMD ["/bin/bash"]
