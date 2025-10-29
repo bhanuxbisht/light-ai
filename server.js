@@ -14,22 +14,42 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
 
-// Check if database is available (optional for testing)
+// Database and route wiring
 let dbAvailable = false;
-try {
-  const { initializeDatabase } = require('./config/database');
+const dbModule = require('./config/database');
+
+// If DB pool exists, mount production routes and attach pool to app
+if (dbModule && dbModule.pool) {
+  const { pool } = dbModule;
+  // Attach to app so route handlers can access it via req.app.get('db')
+  app.set('db', pool);
+
+  // Mount production routes
   const authRoutes = require('./routes/auth');
   const progressRoutes = require('./routes/progress');
   const problemsRoutes = require('./routes/problems');
   const executeRoutes = require('./routes/execute');
+  const patternsRoutes = require('./routes/patterns');
+  const profileRoutes = require('./routes/profile');
   app.use('/api/auth', authRoutes);
   app.use('/api/progress', progressRoutes);
   app.use('/api/problems', problemsRoutes);
   app.use('/api/execute', executeRoutes);
+  app.use('/api/patterns', patternsRoutes);
+  app.use('/api/profile', profileRoutes);
+
   dbAvailable = true;
-} catch (error) {
+} else {
+  // Database not configured - mount demo auth so API still works
   console.log('⚠️  Database not configured - running in demo mode');
-  console.log('   Install PostgreSQL to enable authentication');
+  console.log('   To enable production auth, install PostgreSQL and set DB_* variables in .env');
+
+  // Mount demo auth routes (in-memory)
+  const authDemoRoutes = require('./routes/auth_demo');
+  const executeRoutes = require('./routes/execute');
+  app.use('/api/auth', authDemoRoutes);
+  // Mount execute route as well (it can function without DB)
+  app.use('/api/execute', executeRoutes);
 }
 
 // Serve HTML files
