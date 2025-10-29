@@ -32,27 +32,7 @@ router.get('/me', authenticateToken, async (req, res) => {
   }
 });
 
-// GET /api/profile/:username
-router.get('/:username', optionalAuth, async (req, res) => {
-  const { username } = req.params;
-  try {
-    const userQuery = `
-      SELECT u.username, u.full_name, u.avatar_url,
-        COALESCE(up.total_xp, 0) AS total_xp,
-        COALESCE(up.problems_solved, 0) AS problems_solved
-      FROM users u
-      LEFT JOIN user_progress up ON u.id = up.user_id
-      WHERE u.username = $1
-    `;
-    const { rows } = await pool.query(userQuery, [username]);
-    if (rows.length === 0) {
-      return res.status(404).json({ success: false, error: 'User not found' });
-    }
-    res.json({ success: true, profile: rows[0] });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+// (dynamic username route will be appended at the end of the file)
 
 // PUT /api/profile/me
 router.put('/me', authenticateToken, async (req, res) => {
@@ -82,6 +62,28 @@ router.get('/heatmap', authenticateToken, async (req, res) => {
     `;
     const { rows } = await pool.query(heatmapQuery, [userId]);
     res.json({ success: true, heatmap: rows });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET /api/profile/:username (dynamic) - placed after other fixed routes to avoid conflicts
+router.get('/:username', optionalAuth, async (req, res) => {
+  const { username } = req.params;
+  try {
+    const userQuery = `
+      SELECT u.username, u.full_name, u.avatar_url,
+        COALESCE(up.total_xp, 0) AS total_xp,
+        COALESCE(up.problems_solved, 0) AS problems_solved
+      FROM users u
+      LEFT JOIN user_progress up ON u.id = up.user_id
+      WHERE u.username = $1
+    `;
+    const { rows } = await pool.query(userQuery, [username]);
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    res.json({ success: true, profile: rows[0] });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

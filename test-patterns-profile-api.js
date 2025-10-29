@@ -81,11 +81,11 @@ async function run() {
   }
 
   // 5) PUT /api/profile/me
-  console.log('\n5) PUT /api/profile/me - update bio');
-  r = await makeRequest('/profile/me', { method: 'PUT', headers: { ...authHeader }, body: { avatar: 'avatar.png', bio: 'Automated test bio', preferred_language: 'javascript' } });
+  console.log('\n5) PUT /api/profile/me - update full_name/avatar_url');
+  r = await makeRequest('/profile/me', { method: 'PUT', headers: { ...authHeader }, body: { full_name: 'Automated Test', avatar_url: 'avatar.png' } });
   console.log('Status:', r.status);
   if (r.data && r.data.success) {
-    console.log('Updated bio:', r.data.profile.bio);
+    console.log('Updated full_name:', r.data.profile.full_name);
   } else {
     console.error('Profile update failed:', r.data || r.error);
   }
